@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\ShtikLive.Identity\ShtikLive.Identity.csproj" />
+    <ProjectReference Include="..\..\src\SlidableLive.Identity\SlidableLive.Identity.csproj" />
   </ItemGroup>
 
 </Project>

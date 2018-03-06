@@ -26,8 +26,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ShtikLive.Identity\ShtikLive.Identity.csproj" />
-    <ProjectReference Include="..\ShtikLive.Realtime\ShtikLive.Realtime.csproj" />
+    <ProjectReference Include="..\SlidableLive.Identity\SlidableLive.Identity.csproj" />
+    <ProjectReference Include="..\SlidableLive.Realtime\SlidableLive.Realtime.csproj" />
   </ItemGroup>
 
   <ItemGroup>

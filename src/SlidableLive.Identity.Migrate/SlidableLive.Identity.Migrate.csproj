@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ShtikLive.Identity\ShtikLive.Identity.csproj" />
+    <ProjectReference Include="..\SlidableLive.Identity\SlidableLive.Identity.csproj" />
   </ItemGroup>
 
   <ItemGroup>

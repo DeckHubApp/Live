@@ -6,15 +6,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5CBB3EB8-D3F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{4C279B64-D2FB-4D7F-AC60-94EF1D81CC4C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShtikLive", "src\ShtikLive\ShtikLive.csproj", "{DFC71DC6-5A92-49A3-9006-DDAC16563337}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SlidableLive", "src\SlidableLive\SlidableLive.csproj", "{DFC71DC6-5A92-49A3-9006-DDAC16563337}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShtikLive.Identity", "src\ShtikLive.Identity\ShtikLive.Identity.csproj", "{639C8BBA-1A2C-4338-BDC9-30CA1C509904}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SlidableLive.Identity", "src\SlidableLive.Identity\SlidableLive.Identity.csproj", "{639C8BBA-1A2C-4338-BDC9-30CA1C509904}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShtikLive.Identity.Migrate", "src\ShtikLive.Identity.Migrate\ShtikLive.Identity.Migrate.csproj", "{704960F0-DA3A-4063-8B72-BB8B913DCEEB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SlidableLive.Identity.Migrate", "src\SlidableLive.Identity.Migrate\SlidableLive.Identity.Migrate.csproj", "{704960F0-DA3A-4063-8B72-BB8B913DCEEB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShtikLive.Identity.Tests", "test\ShtikLive.Identity.Tests\ShtikLive.Identity.Tests.csproj", "{E80B3FFE-115C-4F17-A887-A3B35E0EDD01}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SlidableLive.Identity.Tests", "test\SlidableLive.Identity.Tests\SlidableLive.Identity.Tests.csproj", "{E80B3FFE-115C-4F17-A887-A3B35E0EDD01}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShtikLive.Realtime", "src\ShtikLive.Realtime\ShtikLive.Realtime.csproj", "{6ADA312B-36A0-4301-803B-8B71E749ABD9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SlidableLive.Realtime", "src\SlidableLive.Realtime\SlidableLive.Realtime.csproj", "{6ADA312B-36A0-4301-803B-8B71E749ABD9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
