@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
@@ -7,9 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Polly;
-using ShtikLive.Options;
+using SlidableLive.Options;
 
-namespace ShtikLive.Clients
+namespace SlidableLive.Clients
 {
     public class SlidesClient : ISlidesClient
     {

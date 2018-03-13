@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace ShtikLive.Clients
+namespace SlidableLive.Clients
 {
     public static class MultiTask
     {

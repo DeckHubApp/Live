@@ -5,12 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ShtikLive.Clients;
-using ShtikLive.Identity;
-using ShtikLive.Models.Notes;
-using ShtikLive.Models.Questions;
+using SlidableLive.Clients;
+using SlidableLive.Identity;
+using SlidableLive.Models.Questions;
 
-namespace ShtikLive.Controllers
+namespace SlidableLive.Controllers
 {
     [Route("api/questions")]
     [Authorize]
@@ -41,7 +40,7 @@ namespace ShtikLive.Controllers
         [HttpPost("{presenter}/{slug}/{slideNumber}")]
         public async Task<IActionResult> Ask(string presenter, string slug, int slideNumber, [FromBody] Question question, CancellationToken ct)
         {
-            var user = User.FindFirst(ShtikClaimTypes.Handle)?.Value;
+            var user = User.FindFirst(SlidableClaimTypes.Handle)?.Value;
             if (string.IsNullOrWhiteSpace(user))
             {
                 _logger.LogWarning(EventIds.AnonymousAccess, "Anonymous access for {presenter}/{slug}/{slide}", presenter, slug, slideNumber);

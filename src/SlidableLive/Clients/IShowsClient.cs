@@ -1,9 +1,9 @@
 using System.Threading;
 using System.Threading.Tasks;
-using ShtikLive.Models.Live;
-using ShtikLive.Models.Present;
+using SlidableLive.Models.Live;
+using SlidableLive.Models.Present;
 
-namespace ShtikLive.Clients
+namespace SlidableLive.Clients
 {
     public interface IShowsClient
     {

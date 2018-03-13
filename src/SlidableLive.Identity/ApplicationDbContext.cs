@@ -1,8 +1,7 @@
-﻿using System;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace ShtikLive.Identity
+namespace SlidableLive.Identity
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {

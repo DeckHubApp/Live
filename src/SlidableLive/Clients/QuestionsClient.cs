@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
-using ShtikLive.Models.Notes;
-using ShtikLive.Models.Questions;
+using SlidableLive.Models.Questions;
 
-namespace ShtikLive.Clients
+namespace SlidableLive.Clients
 {
     public class QuestionsClient : IQuestionsClient
     {

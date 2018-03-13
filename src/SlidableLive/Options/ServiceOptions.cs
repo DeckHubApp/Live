@@ -1,4 +1,4 @@
-﻿namespace ShtikLive.Options
+﻿namespace SlidableLive.Options
 {
     public class ServiceOptions
     {

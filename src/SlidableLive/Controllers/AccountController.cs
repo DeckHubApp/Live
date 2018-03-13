@@ -1,17 +1,20 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
-using ShtikLive.Identity;
-using ShtikLive.Models.AccountViewModels;
-using ShtikLive.Services;
+using SlidableLive.Identity;
+using SlidableLive.Models.AccountViewModels;
+using SlidableLive.Services;
 
-namespace ShtikLive.Controllers
+namespace SlidableLive.Controllers
 {
     [Authorize]
     public class AccountController : Controller
@@ -174,6 +177,7 @@ namespace ShtikLive.Controllers
             if (result.Succeeded)
             {
                 _logger.LogInformation(5, "User logged in with {Name} provider.", info.LoginProvider);
+                await CreateAuthenticationCookie(User);
                 return RedirectToLocal(returnUrl);
             }
             if (result.RequiresTwoFactor)
@@ -216,6 +220,7 @@ namespace ShtikLive.Controllers
                     result = await _userManager.AddLoginAsync(user, info);
                     if (result.Succeeded)
                     {
+                        await CreateAuthenticationCookie(user);
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         _logger.LogInformation(6, "User created an account using {Name} provider.", info.LoginProvider);
                         return RedirectToLocal(returnUrl);
@@ -226,6 +231,42 @@ namespace ShtikLive.Controllers
 
             ViewData["ReturnUrl"] = returnUrl;
             return View(model);
+        }
+
+        private async Task CreateAuthenticationCookie(ApplicationUser user)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim("Handle", user.Handle),
+                new Claim(ClaimTypes.Email, user.Email)
+            };
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var authProperties = new AuthenticationProperties
+            {
+                IsPersistent = true,
+                IssuedUtc = DateTimeOffset.UtcNow
+            };
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity), authProperties)
+                .ConfigureAwait(false);
+        }
+
+        private async Task CreateAuthenticationCookie(ClaimsPrincipal user)
+        {
+            var name = user.FindFirstValue(ClaimTypes.Name);
+            var handle = user.FindFirstValue(SlidableClaimTypes.Handle);
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, name),
+                new Claim(SlidableClaimTypes.Handle, handle),
+            };
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var authProperties = new AuthenticationProperties
+            {
+                IsPersistent = true,
+                IssuedUtc = DateTimeOffset.UtcNow
+            };
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity), authProperties)
+                .ConfigureAwait(false);
         }
 
         // GET: /Account/ConfirmEmail

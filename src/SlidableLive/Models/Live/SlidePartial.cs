@@ -1,4 +1,4 @@
-﻿namespace ShtikLive.Models.Live
+﻿namespace SlidableLive.Models.Live
 {
     public class SlidePartial
     {

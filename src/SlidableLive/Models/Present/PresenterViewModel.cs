@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using ShtikLive.Models.Live;
-using ShtikLive.Models.Questions;
+using SlidableLive.Models.Live;
+using SlidableLive.Models.Questions;
 
-namespace ShtikLive.Models.Present
+namespace SlidableLive.Models.Present
 {
     public class PresenterViewModel
     {

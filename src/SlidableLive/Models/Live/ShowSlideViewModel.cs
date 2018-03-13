@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 
-namespace ShtikLive.Models.Live
+namespace SlidableLive.Models.Live
 {
     public class ShowSlideViewModel
     {

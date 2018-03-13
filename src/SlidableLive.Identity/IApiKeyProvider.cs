@@ -1,4 +1,4 @@
-﻿namespace ShtikLive.Identity
+﻿namespace SlidableLive.Identity
 {
     public interface IApiKeyProvider
     {

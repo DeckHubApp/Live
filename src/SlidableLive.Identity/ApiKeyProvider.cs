@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 
-namespace ShtikLive.Identity
+namespace SlidableLive.Identity
 {
     public class ApiKeyProvider : IApiKeyProvider
     {

@@ -1,14 +1,13 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ShtikLive.Clients;
-using ShtikLive.Identity;
-using ShtikLive.Models.Notes;
+using SlidableLive.Clients;
+using SlidableLive.Identity;
+using SlidableLive.Models.Notes;
 
-namespace ShtikLive.Controllers
+namespace SlidableLive.Controllers
 {
     [Route("api/notes")]
     [Authorize]
@@ -25,7 +24,7 @@ namespace ShtikLive.Controllers
         [HttpGet("{presenter}/{slug}/{slideNumber}")]
         public async Task<IActionResult> Get(string presenter, string slug, int slideNumber, CancellationToken ct)
         {
-            var user = User.FindFirst(ShtikClaimTypes.Handle)?.Value;
+            var user = User.FindFirst(SlidableClaimTypes.Handle)?.Value;
             if (string.IsNullOrWhiteSpace(user)) return BadRequest();
             var note = await _notes.GetNotes(user, presenter, slug, slideNumber, ct).ConfigureAwait(false);
             return Ok(note ?? new Note());
@@ -34,7 +33,7 @@ namespace ShtikLive.Controllers
         [HttpPut("{presenter}/{slug}/{slideNumber}")]
         public async Task<IActionResult> Put(string presenter, string slug, int slideNumber, [FromBody] Note note, CancellationToken ct)
         {
-            var user = User.FindFirst(ShtikClaimTypes.Handle)?.Value;
+            var user = User.FindFirst(SlidableClaimTypes.Handle)?.Value;
             if (string.IsNullOrWhiteSpace(user)) return BadRequest();
             await _notes.SaveNotes(user, presenter, slug, slideNumber, note, ct).ConfigureAwait(false);
             return Ok();

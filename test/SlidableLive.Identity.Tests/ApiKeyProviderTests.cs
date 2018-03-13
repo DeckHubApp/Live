@@ -1,9 +1,8 @@
-using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using Xunit;
 
-namespace ShtikLive.Identity.Tests
+namespace SlidableLive.Identity.Tests
 {
     public class ApiKeyProviderTests
     {

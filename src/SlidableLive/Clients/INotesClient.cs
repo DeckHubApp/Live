@@ -1,8 +1,8 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using ShtikLive.Models.Notes;
+using SlidableLive.Models.Notes;
 
-namespace ShtikLive.Clients
+namespace SlidableLive.Clients
 {
     public interface INotesClient
     {

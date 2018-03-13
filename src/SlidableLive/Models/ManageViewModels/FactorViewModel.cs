@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace ShtikLive.Models.ManageViewModels
+﻿namespace SlidableLive.Models.ManageViewModels
 {
     public class FactorViewModel
     {

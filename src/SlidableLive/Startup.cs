@@ -1,22 +1,24 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.WindowsAzure.Storage;
-using ShtikLive.Clients;
-using ShtikLive.Hubs;
-using ShtikLive.Identity;
-using ShtikLive.Services;
+using SlidableLive.Clients;
+using SlidableLive.Identity;
+using SlidableLive.Internals;
+using SlidableLive.Services;
 
-namespace ShtikLive
+namespace SlidableLive
 {
+    [PublicAPI]
     public class Startup
     {
         private readonly IHostingEnvironment _env;
@@ -35,10 +37,7 @@ namespace ShtikLive
             services.AddDbContextPool<ApplicationDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.Configure<IdentityOptions>(options =>
-            {
-                options.User.RequireUniqueEmail = true;
-            });
+            services.Configure<IdentityOptions>(options => { options.User.RequireUniqueEmail = true; });
 
             services.Configure<Options.ServiceOptions>(Configuration.GetSection("Services"));
             services.AddSingleton<IShowsClient, ShowsClient>();
@@ -46,11 +45,19 @@ namespace ShtikLive
             services.AddSingleton<INotesClient, NotesClient>();
             services.AddSingleton<IQuestionsClient, QuestionsClient>();
 
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<IUserInfo, UserInfo>();
+
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            services.AddAuthentication(options =>
+                    {
+                        options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    })
+                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,
+                    options => { options.ExpireTimeSpan = TimeSpan.FromHours(24); })
                 .AddTwitter(o =>
                 {
                     o.ConsumerKey = Configuration["Authentication:Twitter:ConsumerKey"];
@@ -61,25 +68,30 @@ namespace ShtikLive
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
-            services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, ShtikClaimsPrincipalFactory>();
+            services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, SlidableClaimsPrincipalFactory>();
 
             services.AddSingleton<IApiKeyProvider, ApiKeyProvider>();
 
             if (!_env.IsDevelopment())
             {
-                var connectionString = Configuration.GetValue("DataProtection:AzureStorageConnectionString", string.Empty);
+                var connectionString =
+                    Configuration.GetValue("DataProtection:AzureStorageConnectionString", string.Empty);
                 if ((!string.IsNullOrWhiteSpace(connectionString)) &&
                     CloudStorageAccount.TryParse(connectionString, out var cloudStorageAccount))
                 {
-                    services.AddDataProtection().PersistKeysToAzureBlobStorage(cloudStorageAccount, "keys/keys.xml");
+                    services.AddDataProtection()
+                        .SetApplicationName("slidable")
+                        .PersistKeysToAzureBlobStorage(cloudStorageAccount, "keys/keys.xml");
                 }
+            }
+            else
+            {
+                services.AddDataProtection()
+                    .DisableAutomaticKeyGeneration()
+                    .SetApplicationName("slidable");
             }
 
             services.AddMvc();
-            services.AddSignalR().AddRedis(o =>
-            {
-                o.Options.EndPoints.Add("redis", 6379);
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -97,12 +109,14 @@ namespace ShtikLive
 
             app.UseStaticFiles();
 
-            app.UseAuthentication();
-
-            app.UseSignalR(routes =>
+            if (env.IsDevelopment())
             {
-                routes.MapHub<LiveHub>("realtime");
-            });
+                app.UseMiddleware<BypassAuthMiddleware>();
+            }
+            else
+            {
+                app.UseAuthentication();
+            }
 
             app.UseMvc(routes =>
             {

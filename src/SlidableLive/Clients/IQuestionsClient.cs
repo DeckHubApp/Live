@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using ShtikLive.Models.Questions;
+using SlidableLive.Models.Questions;
 
-namespace ShtikLive.Clients
+namespace SlidableLive.Clients
 {
     public interface IQuestionsClient
     {

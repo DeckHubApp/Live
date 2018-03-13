@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using ShtikLive.Identity;
-using ShtikLive.Models;
-using ShtikLive.Models.ManageViewModels;
-using ShtikLive.Services;
+using SlidableLive.Identity;
+using SlidableLive.Models.ManageViewModels;
+using SlidableLive.Services;
 
-namespace ShtikLive.Controllers
+namespace SlidableLive.Controllers
 {
     [Authorize]
     public class ManageController : Controller

@@ -3,12 +3,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
-using ShtikLive.Clients;
-using ShtikLive.Models.Live;
+using SlidableLive.Clients;
+using SlidableLive.Models.Live;
 
-namespace ShtikLive.Controllers
+namespace SlidableLive.Controllers
 {
     [Route("live")]
     public class LiveController : Controller

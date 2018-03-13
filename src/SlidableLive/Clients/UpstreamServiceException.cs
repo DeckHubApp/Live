@@ -2,7 +2,7 @@ using System;
 using System.Net;
 using System.Runtime.Serialization;
 
-namespace ShtikLive.Clients
+namespace SlidableLive.Clients
 {
     [Serializable]
     public class UpstreamServiceException : Exception

@@ -3,7 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ShtikLive.Controllers
+namespace SlidableLive.Controllers
 {
     public sealed class StreamResult : IActionResult, IDisposable
     {

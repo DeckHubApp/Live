@@ -1,19 +1,12 @@
 ﻿using System;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
-using Shtik.Rendering.Markdown;
-using ShtikLive.Models.Notes;
-using ShtikLive.Models.Present;
-using Show = ShtikLive.Models.Live.Show;
-using Slide = ShtikLive.Models.Live.Slide;
+using SlidableLive.Models.Notes;
 
-namespace ShtikLive.Clients
+namespace SlidableLive.Clients
 {
     public class NotesClient : INotesClient
     {

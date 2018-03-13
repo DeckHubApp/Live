@@ -1,10 +1,12 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using ShtikLive.Models.Live;
+using SlidableLive.Models.Live;
 
-namespace ShtikLive.Web.Shows
+namespace SlidableLive.Shows
 {
     public interface IShowService
     {
         Task<Show> GetLatest(string presenter);
+        Task<IList<Show>> FindByTag(string tag);
     }
 }

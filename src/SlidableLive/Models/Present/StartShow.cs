@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 
-namespace ShtikLive.Models.Present
+namespace SlidableLive.Models.Present
 {
     public class StartShow
     {

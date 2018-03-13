@@ -1,39 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using ShtikLive.Identity;
-using ShtikLive.Models;
+using SlidableLive.Identity;
+using SlidableLive.Models;
+using SlidableLive.Services;
 
-namespace ShtikLive.Controllers
+namespace SlidableLive.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly SignInManager<ApplicationUser> _signInManager;
-
-        public HomeController(SignInManager<ApplicationUser> signInManager)
+        private readonly IUserInfo _userInfo;
+        public HomeController(IUserInfo userInfo)
         {
-            _signInManager = signInManager;
+            _userInfo = userInfo;
         }
 
         public IActionResult Index()
         {
-            return View();
-        }
-
-        public IActionResult About()
-        {
-            ViewData["Message"] = "Your application description page.";
-
-            return View();
-        }
-
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
-
+            var claims = User.Claims.ToList();
             return View();
         }
 

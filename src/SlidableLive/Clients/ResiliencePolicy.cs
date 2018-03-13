@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Polly;
 using Polly.CircuitBreaker;
-using Polly.Wrap;
 
-namespace ShtikLive.Clients
+namespace SlidableLive.Clients
 {
     public static class ResiliencePolicy
     {

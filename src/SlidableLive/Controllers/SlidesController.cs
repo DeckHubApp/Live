@@ -1,11 +1,10 @@
 ﻿using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ShtikLive.Clients;
+using SlidableLive.Clients;
 
-namespace ShtikLive.Controllers
+namespace SlidableLive.Controllers
 {
     [Route("slides")]
     public class SlidesController : Controller

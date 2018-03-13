@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using ShtikLive.Models.Live;
+using SlidableLive.Models.Live;
 
-namespace ShtikLive.Web.Shows
+namespace SlidableLive.Shows
 {
     public class ShowService : IShowService
     {
@@ -26,6 +27,11 @@ namespace ShtikLive.Web.Shows
                 return JsonConvert.DeserializeObject<Show>(await response.Content.ReadAsStringAsync());
             }
             return null;
+        }
+
+        public Task<IList<Show>> FindByTag(string tag)
+        {
+            throw new NotImplementedException();
         }
     }
 }

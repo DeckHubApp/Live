@@ -1,4 +1,4 @@
-﻿namespace ShtikLive.Models.Notes
+﻿namespace SlidableLive.Models.Notes
 {
     public class Note
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ShtikLive.Models.Questions
+namespace SlidableLive.Models.Questions
 {
     public class Question
     {

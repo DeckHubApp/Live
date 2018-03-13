@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
-using Shtik.Rendering.Markdown;
-using ShtikLive.Models.Present;
-using Show = ShtikLive.Models.Live.Show;
-using Slide = ShtikLive.Models.Live.Slide;
+using SlidableLive.Models.Present;
+using Show = SlidableLive.Models.Live.Show;
+using Slide = SlidableLive.Models.Live.Slide;
 
-namespace ShtikLive.Clients
+namespace SlidableLive.Clients
 {
     public class ShowsClient : IShowsClient
     {
@@ -26,15 +24,12 @@ namespace ShtikLive.Clients
 
         public async Task<Show> Start(StartShow startShow, CancellationToken ct = default)
         {
-            var showRenderer = new ShowRenderer();
-            var renderedShow = showRenderer.Render(startShow.Markdown);
             var show = new Show
             {
                 Place = startShow.Place,
                 Presenter = startShow.Presenter,
                 Slug = startShow.Slug,
                 Time = startShow.Time,
-                Title = renderedShow.Metadata.GetStringOrDefault("title", startShow.Title),
                 HighestSlideShown = 0
             };
             var response = await _http.PostJsonAsync("/shows/start", show, ct: ct).ConfigureAwait(false);

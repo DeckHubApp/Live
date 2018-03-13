@@ -1,6 +1,4 @@
-using System;
-
-namespace ShtikLive.Models
+namespace SlidableLive.Models
 {
     public class ErrorViewModel
     {
