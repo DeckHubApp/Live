@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 
 namespace SlidableLive.Services
@@ -7,6 +8,7 @@ namespace SlidableLive.Services
     {
         private readonly HttpContext _context;
 
+        [UsedImplicitly]
         public UserInfo(IHttpContextAccessor httpContextAccessor)
         {
             _context = httpContextAccessor.HttpContext;
@@ -14,5 +16,6 @@ namespace SlidableLive.Services
 
         public bool IsAuthenticated => _context.User.Identity.IsAuthenticated;
         public string Name => _context.User?.FindFirstValue(ClaimTypes.Name);
+        public string Handle => _context.User?.FindFirstValue(SlidableClaimTypes.Handle);
     }
 }

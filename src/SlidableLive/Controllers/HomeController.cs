@@ -2,7 +2,6 @@
 using System.Linq;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using SlidableLive.Identity;
 using SlidableLive.Models;
 using SlidableLive.Services;
 

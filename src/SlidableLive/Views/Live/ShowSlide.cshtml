@@ -1,9 +1,8 @@
-﻿@using SlidableLive.Identity
-@using SlidableLive.Models.Live
+﻿@using SlidableLive.Models.Live
+@using SlidableLive.Services
 @model SlidableLive.Models.Live.ShowSlideViewModel
 
-@inject SignInManager<ApplicationUser> SignInManager
-@inject UserManager<ApplicationUser> UserManager
+@inject IIdentityPaths IdentityPaths
 
 @{
     Layout = null;
@@ -49,7 +48,7 @@
             </div>
         </div>
         <div id="controls">
-            @if (SignInManager.IsSignedIn(User))
+            @if (Context.User.Identity.IsAuthenticated)
             {
                 <form id="notes">
                     <label for="notesText" class="control-label">Notes:</label>
@@ -67,7 +66,6 @@
             }
             else
             {
-                var loginProviders = (await SignInManager.GetExternalAuthenticationSchemesAsync()).ToList();
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-md-12">
@@ -76,19 +74,7 @@
                     </div>
                     <div class="row">
                     <div class="col-md-8 col-md-offset-2 col-sm-12">
-                        
-                    <form asp-controller="Account" asp-action="ExternalLogin" asp-route-returnurl="@Context.Request.Path.Value" method="post" class="form-horizontal">
-                        <div>
-                            <p>
-                                @foreach (var provider in loginProviders)
-                                {
-                                    <button type="submit" class="btn btn-block btn-lg btn-social btn-@provider.Name.ToLowerInvariant()" name="provider" value="@provider.Name" title="Sign in using @provider.DisplayName account">
-                                        <span class="fa fa-@provider.Name.ToLowerInvariant()"></span>Sign in with @provider.Name
-                                    </button>
-                                }
-                            </p>
-                        </div>
-                    </form>
+                        <a href="@IdentityPaths.Login" class="btn btn-primary">Sign in or Register</a>
                     </div>
                     </div>
                 </div>

@@ -1,4 +1,4 @@
-﻿namespace SlidableLive.Identity
+﻿namespace SlidableLive
 {
     public interface IApiKeyProvider
     {

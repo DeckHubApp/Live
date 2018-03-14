@@ -5,22 +5,20 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.WindowsAzure.Storage;
 using SlidableLive.Clients;
-using SlidableLive.Identity;
 using SlidableLive.Internals;
 using SlidableLive.Services;
+using StackExchange.Redis;
 
 namespace SlidableLive
 {
     [PublicAPI]
     public class Startup
     {
+        private static ConnectionMultiplexer _connectionMultiplexer;
         private readonly IHostingEnvironment _env;
 
         public Startup(IConfiguration configuration, IHostingEnvironment env)
@@ -34,10 +32,8 @@ namespace SlidableLive
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContextPool<ApplicationDbContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
-
-            services.Configure<IdentityOptions>(options => { options.User.RequireUniqueEmail = true; });
+            //services.Configure<IdentityOptions>(options => { options.User.RequireUniqueEmail = true; });
+            services.AddSingleton<IIdentityPaths, IdentityPaths>();
 
             services.Configure<Options.ServiceOptions>(Configuration.GetSection("Services"));
             services.AddSingleton<IShowsClient, ShowsClient>();
@@ -48,40 +44,34 @@ namespace SlidableLive
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IUserInfo, UserInfo>();
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
-
-            services.AddAuthentication(options =>
-                    {
-                        options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    })
-                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,
-                    options => { options.ExpireTimeSpan = TimeSpan.FromHours(24); })
-                .AddTwitter(o =>
-                {
-                    o.ConsumerKey = Configuration["Authentication:Twitter:ConsumerKey"];
-                    o.ConsumerSecret = Configuration["Authentication:Twitter:ConsumerSecret"];
-                });
-
+            ConfigureAuth(services);
 
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
-            services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, SlidableClaimsPrincipalFactory>();
 
             services.AddSingleton<IApiKeyProvider, ApiKeyProvider>();
 
+            var redisHost = Configuration.GetSection("Redis").GetValue<string>("Host");
+            if (!string.IsNullOrWhiteSpace(redisHost))
+            {
+                var redisPort = Configuration.GetSection("Redis").GetValue<int>("Port");
+                if (redisPort == 0)
+                {
+                    redisPort = 6379;
+                }
+
+                _connectionMultiplexer = ConnectionMultiplexer.Connect($"{redisHost}:{redisPort}");
+                services.AddSingleton(_connectionMultiplexer);
+            }
+
             if (!_env.IsDevelopment())
             {
-                var connectionString =
-                    Configuration.GetValue("DataProtection:AzureStorageConnectionString", string.Empty);
-                if ((!string.IsNullOrWhiteSpace(connectionString)) &&
-                    CloudStorageAccount.TryParse(connectionString, out var cloudStorageAccount))
+                var dpBuilder = services.AddDataProtection().SetApplicationName("slidable");
+
+                if (_connectionMultiplexer != null)
                 {
-                    services.AddDataProtection()
-                        .SetApplicationName("slidable")
-                        .PersistKeysToAzureBlobStorage(cloudStorageAccount, "keys/keys.xml");
+                    dpBuilder.PersistKeysToRedis(_connectionMultiplexer, "DataProtection:Keys");
                 }
             }
             else
@@ -94,10 +84,38 @@ namespace SlidableLive
             services.AddMvc();
         }
 
+        private void ConfigureAuth(IServiceCollection services)
+        {
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie();
+            //var identityPaths = new IdentityPaths(Configuration);
+            //services.AddAuthentication(options =>
+            //    {
+            //        options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            //        options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            //    })
+            //    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,
+            //        options =>
+            //        {
+            //            options.ExpireTimeSpan = TimeSpan.FromHours(24);
+            //            options.LoginPath = identityPaths.Login;
+            //            options.LogoutPath = identityPaths.Logout;
+            //            options.Cookie.Name = ".AspNetCore.Cookies";
+            //        });
+        }
+
+        private string AdjustedIdentityPath(string path)
+        {
+            var identityPathPrefix = Configuration["Runtime:IdentityPathPrefix"];
+            return string.IsNullOrWhiteSpace(identityPathPrefix)
+                ? path
+                : "/" + string.Join('/', new[] {identityPathPrefix.Trim('/'), path.Trim('/')});
+        }
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (env.IsDevelopment() || string.Equals(Configuration["Runtime:DeveloperExceptionPage"], "true", StringComparison.OrdinalIgnoreCase))
             {
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
@@ -126,4 +144,9 @@ namespace SlidableLive
             });
         }
     }
+    public static class SlidableClaimTypes
+    {
+        public const string Handle = "http://schema.slidable.io/identity/claims/handle";
+    }
+
 }

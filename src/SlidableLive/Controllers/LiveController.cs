@@ -43,7 +43,7 @@ namespace SlidableLive.Controllers
                 _logger.LogWarning(EventIds.PresenterShowNotFound, "Show '{slug}' not found for presenter '{presenter}'", slug, presenter);
                 return NotFound();
             }
-            return RedirectToAction("ShowSlide", new { presenter, slug, number = show.HighestSlideShown });
+            return RedirectToAction("ShowSlide", new { presenter, slug, number = show.HighestSlideShown.GetValueOrDefault() });
         }
 
         [HttpGet("{presenter}/{slug}/{number:int}")]
@@ -51,8 +51,8 @@ namespace SlidableLive.Controllers
         {
             var show = await _shows.Get(presenter, slug);
             if (show == null) return NotFound();
-            if (show.HighestSlideShown < number)
-                return RedirectToAction("ShowSlide", new {presenter, slug, number = show.HighestSlideShown});
+            if (show.HighestSlideShown.GetValueOrDefault() < number)
+                return RedirectToAction("ShowSlide", new {presenter, slug, number = show.HighestSlideShown.GetValueOrDefault()});
 
             var viewModel = new ShowSlideViewModel
             {
@@ -70,7 +70,7 @@ namespace SlidableLive.Controllers
         public async Task<IActionResult> GetSlidePartial(string presenter, string slug, int number)
         {
             var show = await _shows.Get(presenter, slug);
-            if (show == null || show.HighestSlideShown < number) return NotFound();
+            if (show == null || show.HighestSlideShown.GetValueOrDefault() < number) return NotFound();
 
             var slidePartial = new SlidePartial
             {

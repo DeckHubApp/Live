@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using SlidableLive.Models.Live;
+using SlidableLive.Options;
 
 namespace SlidableLive.Shows
 {

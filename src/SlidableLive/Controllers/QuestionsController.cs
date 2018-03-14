@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SlidableLive.Clients;
-using SlidableLive.Identity;
 using SlidableLive.Models.Questions;
 
 namespace SlidableLive.Controllers

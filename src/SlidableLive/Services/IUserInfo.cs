@@ -4,5 +4,6 @@
     {
         bool IsAuthenticated { get; }
         string Name { get; }
+        string Handle { get; }
     }
 }

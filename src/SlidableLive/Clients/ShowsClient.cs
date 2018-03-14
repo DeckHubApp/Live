@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -48,28 +49,10 @@ namespace SlidableLive.Clients
             return await response.Deserialize<Show>();
         }
 
-        public async Task<Slide> GetLatestSlide(string presenter, string slug, CancellationToken ct = default)
+        public async Task<IList<Show>> FindByTag(string tag, CancellationToken ct = default)
         {
-            var response = await _http.GetAsync($"/slides/{presenter}/{slug}/latest", ct).ConfigureAwait(false);
-            return await response.Deserialize<Slide>();
-        }
-
-        public async Task<Slide> GetSlide(string presenter, string slug, int number, CancellationToken ct = default)
-        {
-            var response = await _http.GetAsync($"/slides/{presenter}/{slug}/{number}", ct).ConfigureAwait(false);
-            return await response.Deserialize<Slide>();
-        }
-
-        public async Task<bool> ShowSlide(string presenter, string slug, int number, CancellationToken ct = default)
-        {
-            var response = await _http.PutAsync($"/shows/{presenter}/{slug}?highestSlideShown={number}", new StringContent(string.Empty), ct)
-                .ConfigureAwait(false);
-            if (response.IsSuccessStatusCode) return true;
-            if (response.StatusCode == HttpStatusCode.NotFound)
-            {
-                return false;
-            }
-            throw new UpstreamServiceException(response.StatusCode, response.ReasonPhrase);
+            var response = await _http.GetAsync($"/shows/find-by-tag/{tag}", ct).ConfigureAwait(false);
+            return await response.Deserialize<Show[]>();
         }
     }
 }

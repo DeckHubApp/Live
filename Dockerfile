@@ -1,17 +1,17 @@
-FROM microsoft/aspnetcore-build:2.0.3 AS build
+FROM microsoft/aspnetcore-build:2.1.300-preview1-bionic AS build
 
 WORKDIR /code
 
 COPY . .
 
-WORKDIR /code/src/ShtikLive
+WORKDIR /code/src/SlidableLive
 
 RUN dotnet publish --output /output --configuration Release
 
-FROM microsoft/aspnetcore:2.0.3
+FROM microsoft/aspnetcore:2.1.0-preview1-bionic
 
 COPY --from=build /output /app/
 
 WORKDIR /app
 
-ENTRYPOINT ["dotnet", "ShtikLive.dll"]
+ENTRYPOINT ["dotnet", "SlidableLive.dll"]

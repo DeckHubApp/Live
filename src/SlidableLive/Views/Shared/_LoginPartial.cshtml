@@ -1,25 +1,25 @@
 @using Microsoft.AspNetCore.Identity
-@using SlidableLive.Identity
 @using SlidableLive.Services
 
 @inject IUserInfo UserInfo
+@inject IIdentityPaths IdentityPaths
 
-@if (!string.IsNullOrWhiteSpace(UserInfo.Name))
+@* ReSharper disable Html.PathError *@
+@if (UserInfo.IsAuthenticated)
 {
-    <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="navbar-right">
-        <ul class="nav navbar-nav navbar-right">
-            <li>
-                <a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage"><span class="fa fa-user"></span> @UserInfo.Name</a>
-            </li>
-            <li>
-                <button type="submit" class="btn btn-link navbar-btn navbar-link">Log out</button>
-            </li>
-        </ul>
-    </form>
+    <ul class="navbar-nav navbar-right flex-row">
+        <li class="nav-item">
+            <a href="@IdentityPaths.Manage" title="Manage" class="nav-link"><span class="fa fa-user"></span> @UserInfo.Handle</a>
+        </li>
+        <li class="nav-item ml-2">
+            <a href="@IdentityPaths.Logout" class="btn btn-outline-secondary">Log out</a>
+        </li>
+    </ul>
 }
 else
 {
     <ul class="nav navbar-nav navbar-right">
-        <li><a asp-area="" asp-controller="Account" asp-action="Login">Log in</a></li>
+        <li><a class="btn btn-info" href="@IdentityPaths.Login">Log in</a></li>
     </ul>
 }
+@* ReSharper restore Html.PathError *@

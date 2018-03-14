@@ -1,4 +1,4 @@
-﻿namespace SlidableLive.Shows
+﻿namespace SlidableLive.Options
 {
     public class ShowOptions
     {
