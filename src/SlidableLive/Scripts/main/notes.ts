@@ -1,4 +1,4 @@
-﻿namespace Shtik.Notes {
+﻿namespace Slidable.Notes {
     
     interface INote {
         text: string;

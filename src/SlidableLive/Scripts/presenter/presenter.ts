@@ -1,4 +1,6 @@
-﻿namespace Shtik.Presenter {
+﻿/// <reference path="../hub.ts"/>
+
+namespace Slidable.Presenter {
 
 // ReSharper disable InconsistentNaming
     interface IMessage {

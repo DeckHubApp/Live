@@ -23,9 +23,7 @@
     <DotNetCliToolReference Include="BundlerMinifier.Core" Version="2.6.362" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="Scripts\shtik.ts" />
-  </ItemGroup>
-  <ItemGroup>
+    <Folder Include="Scripts\main\" />
     <Folder Include="wwwroot\lib\signalr\" />
   </ItemGroup>
 </Project>

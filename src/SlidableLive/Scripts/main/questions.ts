@@ -1,4 +1,6 @@
-﻿namespace Shtik.Questions {
+﻿/// <reference path="../hub.ts" />
+
+namespace Slidable.Questions {
 
     interface IQuestion {
         id: string;
@@ -27,6 +29,7 @@
         public dirty: boolean;
 
         constructor() {
+            Hub.onConnected(this._onConnected);
             this._form = document.getElementById("questions") as HTMLFormElement;
             if (!!this._form) {
 
@@ -43,6 +46,12 @@
                 }
             }
         }
+
+        private _onConnected = () => {
+            Hub.hubConnection.on<IQuestion>("question", q => {
+                this._appendQuestion(q.id, q.user, q.text);
+            });
+        };
 
         public load = () => {
             if (!this._list) return;
@@ -80,13 +89,6 @@
                     this._setSaving(false);
                     return false;
                 });
-        }
-
-        public onMessage = (e: MessageEvent) => {
-            const data = JSON.parse(e.data) as IMessage;
-            if (data.MessageType === "question") {
-                this._appendQuestion(data.Id, data.User, data.Text);
-            }
         }
 
         private _appendQuestion = (id, user, text) => {

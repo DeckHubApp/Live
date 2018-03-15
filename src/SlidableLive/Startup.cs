@@ -88,20 +88,6 @@ namespace SlidableLive
         {
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie();
-            //var identityPaths = new IdentityPaths(Configuration);
-            //services.AddAuthentication(options =>
-            //    {
-            //        options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            //        options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            //    })
-            //    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,
-            //        options =>
-            //        {
-            //            options.ExpireTimeSpan = TimeSpan.FromHours(24);
-            //            options.LoginPath = identityPaths.Login;
-            //            options.LogoutPath = identityPaths.Logout;
-            //            options.Cookie.Name = ".AspNetCore.Cookies";
-            //        });
         }
 
         private string AdjustedIdentityPath(string path)

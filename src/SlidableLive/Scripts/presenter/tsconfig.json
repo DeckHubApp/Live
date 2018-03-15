@@ -5,13 +5,11 @@
     "noEmitOnError": true,
     "removeComments": false,
     "sourceMap": true,
-    "target": "es2015"
+    "target": "es2015",
+    "outFile": "../../wwwroot/js/presenter.js"
   },
   "include": [
-    "Scripts/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "wwwroot"
+    "../hub.ts",
+    "presenter.ts"
   ]
 }

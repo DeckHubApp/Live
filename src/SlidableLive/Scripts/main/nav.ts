@@ -1,4 +1,4 @@
-﻿namespace Shtik.Nav {
+﻿namespace Slidable.Nav {
     interface IPartial {
         slideImageUrl: string;
     }

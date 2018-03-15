@@ -1,5 +1,6 @@
-var Shtik;
-(function (Shtik) {
+/// <reference path="../hub.ts"/>
+var Slidable;
+(function (Slidable) {
     var Presenter;
     (function (Presenter) {
         // ReSharper restore InconsistentNaming
@@ -28,6 +29,6 @@ var Shtik;
                 }
             });
         });
-    })(Presenter = Shtik.Presenter || (Shtik.Presenter = {}));
-})(Shtik || (Shtik = {}));
+    })(Presenter = Slidable.Presenter || (Slidable.Presenter = {}));
+})(Slidable || (Slidable = {}));
 //# sourceMappingURL=presenter.js.map

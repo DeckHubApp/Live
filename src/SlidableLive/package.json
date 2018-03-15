@@ -1,7 +1,7 @@
 {
   "name": "shtik-live",
   "version": "1.0.0",
-  "description": "Online Shtik",
+  "description": "Online Slidable",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

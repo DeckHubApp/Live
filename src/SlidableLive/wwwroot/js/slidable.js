@@ -1,5 +1,84 @@
-var Shtik;
-(function (Shtik) {
+var Slidable;
+(function (Slidable) {
+    var Nav;
+    (function (Nav) {
+        function loadSlide(url) {
+            return fetch(url, { method: "GET" })
+                .then(response => response.ok ? response.text() : null);
+        }
+        class NavButtons {
+            constructor() {
+                this.transition = () => {
+                    const url = window.location.href + "/partial";
+                    loadSlide(url)
+                        .then(json => {
+                        if (!json) {
+                            this.goBack();
+                            return;
+                        }
+                        const partial = JSON.parse(json);
+                        this._image.style.backgroundImage = `url(${partial.slideImageUrl})`;
+                    });
+                };
+                this.go = (href) => {
+                    history.pushState(null, null, href);
+                    this.transition();
+                };
+                this.goBack = () => {
+                    const parts = location.pathname.split("/");
+                    const slide = Math.max(parseInt(parts.pop()) - 1, 0);
+                    const href = location.href.replace(/\/[0-9]+$/, `/${slide}`);
+                    this.go(href);
+                };
+                this._onFirst = () => {
+                    const current = this._currentSlide();
+                    if (current.slide === 0)
+                        return;
+                    const href = `/live/${current.presenter}/${current.slug}/0`;
+                    this.go(href);
+                };
+                this._onLast = () => {
+                    const current = this._currentSlide();
+                    const href = `/live/${current.presenter}/${current.slug}`;
+                    history.pushState(null, null, href);
+                    window.location.reload();
+                };
+                this._onPrevious = () => {
+                    const current = this._currentSlide();
+                    if (current.slide === 0)
+                        return;
+                    const href = `/live/${current.presenter}/${current.slug}/${current.slide - 1}`;
+                    this.go(href);
+                };
+                this._onNext = () => {
+                    const current = this._currentSlide();
+                    const href = `/live/${current.presenter}/${current.slug}/${current.slide + 1}`;
+                    this.go(href);
+                };
+                this._currentSlide = () => {
+                    const parts = location.pathname.split("/");
+                    const slide = parseInt(parts.pop());
+                    const slug = parts.pop();
+                    const presenter = parts.pop();
+                    return { presenter, slug, slide };
+                };
+                this._first = document.querySelector("button#first-btn");
+                this._first.addEventListener("click", this._onFirst);
+                this._previous = document.querySelector("button#previous-btn");
+                this._previous.addEventListener("click", this._onPrevious);
+                this._next = document.querySelector("button#next-btn");
+                this._next.addEventListener("click", this._onNext);
+                this._last = document.querySelector("button#last-btn");
+                this._last.addEventListener("click", this._onLast);
+                this._image = document.querySelector("div#slide-image");
+                window.addEventListener("popstate", this.transition);
+            }
+        }
+        Nav.NavButtons = NavButtons;
+    })(Nav = Slidable.Nav || (Slidable.Nav = {}));
+})(Slidable || (Slidable = {}));
+var Slidable;
+(function (Slidable) {
     var Notes;
     (function (Notes) {
         class NotesForm {
@@ -80,16 +159,21 @@ var Shtik;
             }
         }
         Notes.NotesForm = NotesForm;
-    })(Notes = Shtik.Notes || (Shtik.Notes = {}));
-})(Shtik || (Shtik = {}));
-//# sourceMappingURL=notes.js.map
-var Shtik;
-(function (Shtik) {
+    })(Notes = Slidable.Notes || (Slidable.Notes = {}));
+})(Slidable || (Slidable = {}));
+/// <reference path="../hub.ts" />
+var Slidable;
+(function (Slidable) {
     var Questions;
     (function (Questions) {
         // ReSharper restore InconsistentNaming
         class QuestionsForm {
             constructor() {
+                this._onConnected = () => {
+                    Slidable.Hub.hubConnection.on("question", q => {
+                        this._appendQuestion(q.id, q.user, q.text);
+                    });
+                };
                 this.load = () => {
                     if (!this._list)
                         return;
@@ -125,12 +209,6 @@ var Shtik;
                         return false;
                     });
                 };
-                this.onMessage = (e) => {
-                    const data = JSON.parse(e.data);
-                    if (data.MessageType === "question") {
-                        this._appendQuestion(data.Id, data.User, data.Text);
-                    }
-                };
                 this._appendQuestion = (id, user, text) => {
                     id = `q${id}`;
                     let li = this._list.querySelector(`#${id}`);
@@ -162,6 +240,7 @@ var Shtik;
                     }
                     return this._saving;
                 };
+                Slidable.Hub.onConnected(this._onConnected);
                 this._form = document.getElementById("questions");
                 if (!!this._form) {
                     this._textarea = this._form.querySelector("textarea");
@@ -185,130 +264,39 @@ var Shtik;
             }
         }
         Questions.QuestionsForm = QuestionsForm;
-    })(Questions = Shtik.Questions || (Shtik.Questions = {}));
-})(Shtik || (Shtik = {}));
-//# sourceMappingURL=questions.js.map
-var Shtik;
-(function (Shtik) {
-    var Nav;
-    (function (Nav) {
-        function loadSlide(url) {
-            return fetch(url, { method: "GET" })
-                .then(response => response.ok ? response.text() : null);
-        }
-        class NavButtons {
-            constructor() {
-                this.transition = () => {
-                    const url = window.location.href + "/partial";
-                    loadSlide(url)
-                        .then(json => {
-                        if (!json) {
-                            this.goBack();
-                            return;
-                        }
-                        const partial = JSON.parse(json);
-                        this._image.style.backgroundImage = `url(${partial.slideImageUrl})`;
-                    });
-                };
-                this.go = (href) => {
-                    history.pushState(null, null, href);
-                    this.transition();
-                };
-                this.goBack = () => {
-                    const parts = location.pathname.split("/");
-                    const slide = Math.max(parseInt(parts.pop()) - 1, 0);
-                    const href = location.href.replace(/\/[0-9]+$/, `/${slide}`);
-                    this.go(href);
-                };
-                this._onFirst = () => {
-                    const current = this._currentSlide();
-                    if (current.slide === 0)
-                        return;
-                    const href = `/live/${current.presenter}/${current.slug}/0`;
-                    this.go(href);
-                };
-                this._onLast = () => {
-                    const current = this._currentSlide();
-                    const href = `/live/${current.presenter}/${current.slug}`;
-                    history.pushState(null, null, href);
-                    window.location.reload();
-                };
-                this._onPrevious = () => {
-                    const current = this._currentSlide();
-                    if (current.slide === 0)
-                        return;
-                    const href = `/live/${current.presenter}/${current.slug}/${current.slide - 1}`;
-                    this.go(href);
-                };
-                this._onNext = () => {
-                    const current = this._currentSlide();
-                    const href = `/live/${current.presenter}/${current.slug}/${current.slide + 1}`;
-                    this.go(href);
-                };
-                this._currentSlide = () => {
-                    const parts = location.pathname.split("/");
-                    const slide = parseInt(parts.pop());
-                    const slug = parts.pop();
-                    const presenter = parts.pop();
-                    return { presenter, slug, slide };
-                };
-                this._first = document.querySelector("button#first-btn");
-                this._first.addEventListener("click", this._onFirst);
-                this._previous = document.querySelector("button#previous-btn");
-                this._previous.addEventListener("click", this._onPrevious);
-                this._next = document.querySelector("button#next-btn");
-                this._next.addEventListener("click", this._onNext);
-                this._last = document.querySelector("button#last-btn");
-                this._last.addEventListener("click", this._onLast);
-                this._image = document.querySelector("div#slide-image");
-                window.addEventListener("popstate", this.transition);
-            }
-        }
-        Nav.NavButtons = NavButtons;
-    })(Nav = Shtik.Nav || (Shtik.Nav = {}));
-})(Shtik || (Shtik = {}));
-//# sourceMappingURL=nav.js.map
+    })(Questions = Slidable.Questions || (Slidable.Questions = {}));
+})(Slidable || (Slidable = {}));
 /// <reference path="./notes.ts" />
 /// <reference path="./questions.ts" />
 /// <reference path="./nav.ts" />
-var Shtik;
-(function (Shtik) {
+/// <reference path="../hub.ts" />
+var Slidable;
+(function (Slidable) {
     var AutoNav;
     (function (AutoNav) {
-        var NotesForm = Shtik.Notes.NotesForm;
-        var QuestionsForm = Shtik.Questions.QuestionsForm;
-        var NavButtons = Shtik.Nav.NavButtons;
+        var NotesForm = Slidable.Notes.NotesForm;
+        var QuestionsForm = Slidable.Questions.QuestionsForm;
+        var NavButtons = Slidable.Nav.NavButtons;
         var notesForm;
         var questionsForm;
         var nav;
-        var hubConnection;
-        function hubConnect() {
-            hubConnection = new signalR.HubConnection("/realtime");
-            hubConnection.on("Send", data => {
-                if (data.slideAvailable) {
+        Slidable.Hub.onConnected(() => {
+            Slidable.Hub.hubConnection.on("slideAvailable", data => {
+                if (data.number) {
                     if (notesForm.dirty || questionsForm.dirty)
                         return;
-                    nav.go(window.location.pathname.replace(/\/[0-9]+$/, `/${data.slideAvailable}`));
+                    nav.go(window.location.pathname.replace(/\/[0-9]+$/, `/${data.number}`));
                 }
             });
-            hubConnection.onclose(e => {
-                console.error(e.message);
-                setTimeout(hubConnect, 1000);
-            });
-            hubConnection.start()
-                .then(() => {
-                const groupName = window.location.pathname.replace("/live/", "").replace(/\/[0-9]+$/, "");
-                hubConnection.invoke("Join", groupName);
-            });
-        }
+        });
         document.addEventListener("DOMContentLoaded", () => {
             notesForm = new NotesForm();
             notesForm.load();
             questionsForm = new QuestionsForm();
             questionsForm.load();
             nav = new NavButtons();
-            hubConnect();
+            Slidable.Hub.connect();
         });
-    })(AutoNav = Shtik.AutoNav || (Shtik.AutoNav = {}));
-})(Shtik || (Shtik = {}));
-//# sourceMappingURL=shtik.js.map
+    })(AutoNav = Slidable.AutoNav || (Slidable.AutoNav = {}));
+})(Slidable || (Slidable = {}));
+//# sourceMappingURL=slidable.js.map
