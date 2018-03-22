@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore;
+﻿using App.Metrics.AspNetCore;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
 namespace SlidableLive
@@ -12,6 +13,8 @@ namespace SlidableLive
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseMetrics()
+                .UseMetricsWebTracking()
                 .UseStartup<Startup>()
                 .Build();
     }

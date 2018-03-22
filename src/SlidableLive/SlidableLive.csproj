@@ -7,6 +7,9 @@
     <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="App.Metrics.AspNetCore.Mvc" Version="2.0.0-preview1" />
+    <PackageReference Include="App.Metrics.Reporting.Console" Version="2.0.0-preview1" />
+    <PackageReference Include="App.Metrics.Reporting.InfluxDB" Version="2.0.0-preview1" />
     <PackageReference Include="JetBrains.Annotations" Version="11.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.0-preview1-final" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.Redis" Version="0.4.0-alpha1-final" />

@@ -1,17 +1,22 @@
 ﻿using System;
+using System.Threading.Tasks;
+using App.Metrics;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
 using SlidableLive.Clients;
 using SlidableLive.Internals;
 using SlidableLive.Services;
 using StackExchange.Redis;
+using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace SlidableLive
 {
@@ -81,7 +86,29 @@ namespace SlidableLive
                     .SetApplicationName("slidable");
             }
 
-            services.AddMvc();
+            services.AddMvc(o => { o.AddMetricsResourceFilter(); });
+
+            var influxDb = Configuration["AppMetrics:InfluxDbServer"];
+            var influxDatabase = Configuration["AppMetrics:InfluxDbDatabase"];
+            if (!string.IsNullOrWhiteSpace(influxDb))
+            {
+                Console.WriteLine($"AppMetrics reporting to {influxDb}/{influxDatabase}");
+                var metrics = AppMetrics.CreateDefaultBuilder()
+                    .Report.ToInfluxDb(influxDb, influxDatabase, TimeSpan.FromSeconds(5))
+                    .Report.ToConsole()
+                    .Configuration.Configure(o =>
+                    {
+                        o.DefaultContextLabel = "slidable-web";
+                        o.AddServerTag(Environment.MachineName);
+                        o.Enabled = true;
+                        o.ReportingEnabled = true;
+                    })
+                    .Build();
+
+                services.AddMetrics(metrics);
+                services.AddMetricsTrackingMiddleware();
+                services.AddSingleton<IHostedService>(new MetricsReportWriter(metrics, TimeSpan.FromSeconds(5)));
+            }
         }
 
         private void ConfigureAuth(IServiceCollection services)
@@ -111,6 +138,11 @@ namespace SlidableLive
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            app.UseMetricsActiveRequestMiddleware()
+                .UseMetricsApdexTrackingMiddleware()
+                .UseMetricsErrorTrackingMiddleware()
+                .UseMetricsRequestTrackingMiddleware();
+
             app.UseStaticFiles();
 
             if (env.IsDevelopment())
@@ -130,9 +162,4 @@ namespace SlidableLive
             });
         }
     }
-    public static class SlidableClaimTypes
-    {
-        public const string Handle = "http://schema.slidable.io/identity/claims/handle";
-    }
-
 }
