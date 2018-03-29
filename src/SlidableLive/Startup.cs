@@ -51,10 +51,6 @@ namespace SlidableLive
 
             ConfigureAuth(services);
 
-            // Add application services.
-            services.AddTransient<IEmailSender, AuthMessageSender>();
-            services.AddTransient<ISmsSender, AuthMessageSender>();
-
             services.AddSingleton<IApiKeyProvider, ApiKeyProvider>();
 
             var redisHost = Configuration.GetSection("Redis").GetValue<string>("Host");
@@ -138,7 +134,7 @@ namespace SlidableLive
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            app.UseMetricsActiveRequestMiddleware()
+            app.UseMetricsAllMiddleware()
                 .UseMetricsApdexTrackingMiddleware()
                 .UseMetricsErrorTrackingMiddleware()
                 .UseMetricsRequestTrackingMiddleware();

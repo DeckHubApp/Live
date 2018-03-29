@@ -7,6 +7,14 @@
     <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Scripts\hub.ts" />
+    <None Remove="Scripts\main\nav.ts" />
+    <None Remove="Scripts\main\notes.ts" />
+    <None Remove="Scripts\main\questions.ts" />
+    <None Remove="Scripts\main\slidable.ts" />
+    <None Remove="Scripts\presenter\presenter.ts" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="App.Metrics.AspNetCore.Mvc" Version="2.0.0-preview1" />
     <PackageReference Include="App.Metrics.Reporting.Console" Version="2.0.0-preview1" />
     <PackageReference Include="App.Metrics.Reporting.InfluxDB" Version="2.0.0-preview1" />
@@ -26,7 +34,14 @@
     <DotNetCliToolReference Include="BundlerMinifier.Core" Version="2.6.362" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Scripts\main\" />
     <Folder Include="wwwroot\lib\signalr\" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="Scripts\hub.ts" />
+    <TypeScriptCompile Include="Scripts\main\nav.ts" />
+    <TypeScriptCompile Include="Scripts\main\notes.ts" />
+    <TypeScriptCompile Include="Scripts\main\questions.ts" />
+    <TypeScriptCompile Include="Scripts\main\slidable.ts" />
+    <TypeScriptCompile Include="Scripts\presenter\presenter.ts" />
   </ItemGroup>
 </Project>

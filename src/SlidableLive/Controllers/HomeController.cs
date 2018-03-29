@@ -3,7 +3,6 @@ using System.Linq;
 using App.Metrics;
 using App.Metrics.Counter;
 using App.Metrics.Timer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SlidableLive.Models;
 using SlidableLive.Services;
