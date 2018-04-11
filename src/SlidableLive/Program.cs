@@ -1,4 +1,7 @@
-﻿using App.Metrics.AspNetCore;
+﻿using System;
+using App.Metrics;
+using App.Metrics.AspNetCore;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
@@ -6,6 +9,7 @@ namespace SlidableLive
 {
     public class Program
     {
+        [UsedImplicitly]
         public static void Main(string[] args)
         {
             BuildWebHost(args).Run();
@@ -13,8 +17,7 @@ namespace SlidableLive
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseMetrics()
-                .UseMetricsWebTracking()
+                .UseStandardMetrics()
                 .UseStartup<Startup>()
                 .Build();
     }

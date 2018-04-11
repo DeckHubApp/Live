@@ -1,14 +1,13 @@
 ﻿using System.Diagnostics;
-using System.Linq;
 using App.Metrics;
 using App.Metrics.Counter;
 using App.Metrics.Timer;
 using Microsoft.AspNetCore.Mvc;
 using SlidableLive.Models;
-using SlidableLive.Services;
 
 namespace SlidableLive.Controllers
 {
+    [Route("")]
     public class HomeController : Controller
     {
         private static readonly CounterOptions Counter = new CounterOptions
@@ -23,21 +22,19 @@ namespace SlidableLive.Controllers
             DurationUnit = TimeUnit.Milliseconds
         };
 
-        private readonly IUserInfo _userInfo;
         private readonly IMetrics _metrics;
 
-        public HomeController(IUserInfo userInfo, IMetrics metrics)
+        public HomeController(IMetrics metrics)
         {
-            _userInfo = userInfo;
             _metrics = metrics;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             _metrics.Measure.Counter.Increment(Counter);
             using (_metrics.Measure.Timer.Time(Timer))
             {
-                var claims = User.Claims.ToList();
                 return View();
             }
         }

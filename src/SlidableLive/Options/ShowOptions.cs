@@ -2,6 +2,6 @@
 {
     public class ShowOptions
     {
-        public string ServiceUrl { get; set; }
+        public string FindUrl { get; set; }
     }
 }

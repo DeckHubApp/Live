@@ -1,4 +1,7 @@
-﻿@{
+﻿@using Microsoft.Extensions.Options
+@using SlidableLive.Options
+@inject IOptions<ShowOptions> ShowOptions
+@{
     ViewData["Title"] = "Home";
     Layout = "_Layout";
 }
@@ -43,7 +46,7 @@
         <p class="lead">Very much a work in progress</p>
     </div>
     <div class="col-md-6 col-sm-12">
-        <form asp-controller="Shows" asp-action="FindByTag" method="get">
+        <form action="@ShowOptions?.Value?.FindUrl" method="get">
             <div class="form-group">
                 <label class="bangers">Join a show:</label>
                 <input type="text" name="tag" id="tag" value="" class="form-control form-control-lg" placeholder="Show Tag"/>
