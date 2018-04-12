@@ -27,7 +27,6 @@ namespace SlidableLive
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IIdentityPaths, IdentityPaths>();
@@ -38,8 +37,6 @@ namespace SlidableLive
             var connectionMultiplexer = ConfigureRedis(services);
 
             ConfigureDataProtection(services, connectionMultiplexer);
-
-            //services.AddDefaultMetrics(Configuration, "slidable-web");
 
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
@@ -56,8 +53,6 @@ namespace SlidableLive
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-
-            //app.UseMetricsAllMiddleware();
 
             app.UseStaticFiles();
 
