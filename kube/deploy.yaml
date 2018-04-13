@@ -11,18 +11,18 @@ spec:
         app: web
     spec:
       containers:
-      - image: slidable/web:1.1.0
+      - image: slidable/web:1.0.0-alpha1
         imagePullPolicy: Always
         name: web
         env:
-          - name: Services__Shows__BaseUrl
-            value: "http://shows"
-          - name: Services__Slides__BaseUrl
-            value: "http://slides"
-          - name: Services__Notes__BaseUrl
-            value: "http://notes"
-          - name: Services__Questions__BaseUrl
-            value: "http://questions"
+          - name: Redis__Host
+            value: 'redis'
+          - name: Runtime__IdentityPathPrefix
+            value: 'i'
+          - name: AppMetrics__InfluxDbServer
+            value: 'http://rlmetrics.eastus.cloudapp.azure.com:8086'
+          - name: AppMetrics__InfluxDbDatabase
+            value: 'slidable'
           - name: Security__ApiKeyHashPhrase
             valueFrom:
               secretKeyRef:
