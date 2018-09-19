@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using DeckHubLive.Internals;
 using DeckHubLive.Options;
 using DeckHubLive.Services;
+using RendleLabs.DeckHub.Cookies;
 using StackExchange.Redis;
 
 namespace DeckHubLive
@@ -64,6 +65,8 @@ namespace DeckHubLive
             {
                 app.UseAuthentication();
             }
+
+            app.UseDeckHubCookieReader();
 
             app.UseMvc(routes =>
             {

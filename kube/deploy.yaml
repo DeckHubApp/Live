@@ -11,7 +11,7 @@ spec:
         app: web
     spec:
       containers:
-      - image: deckhub/web:1.0.0-alpha2
+      - image: deckhub/web:1.0.0-alpha3
         imagePullPolicy: Always
         name: web
         env:
